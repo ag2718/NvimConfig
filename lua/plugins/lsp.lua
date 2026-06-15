@@ -1,0 +1,89 @@
+local gh = function(repo) return 'https://github.com/' .. repo end
+
+-- Some complicated LSP stuff I do not understand :)
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+  callback = function(event)
+    local map = function(keys, func, desc, mode)
+      vim.keymap.set(mode or 'n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+    end
+
+    map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+    map('gra', vim.lsp.buf.code_action, 'Code [A]ction', { 'n', 'x' })
+    map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+      local au = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        buffer = event.buf,
+        group = au,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+        buffer = event.buf,
+        group = au,
+        callback = vim.lsp.buf.clear_references,
+      })
+      vim.api.nvim_create_autocmd('LspDetach', {
+        group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
+        callback = function(ev2)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = ev2.buf }
+        end,
+      })
+    end
+
+    if client and client:supports_method('textDocument/inlayHint', event.buf) then
+      map('<leader>th', function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+      end, '[T]oggle Inlay [H]ints')
+    end
+  end,
+})
+
+local servers = {
+  pyright = {},
+  stylua = {},
+  lua_ls = {
+    on_init = function(client)
+      client.server_capabilities.documentFormattingProvider = false
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if path ~= vim.fn.stdpath 'config'
+          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+        then
+          return
+        end
+      end
+      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        runtime = { version = 'LuaJIT', path = { 'lua/?.lua', 'lua/?/init.lua' } },
+        workspace = {
+          checkThirdParty = false,
+          library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+            '${3rd}/luv/library',
+            '${3rd}/busted/library',
+          }),
+        },
+      })
+    end,
+    settings = { Lua = { format = { enable = false } } },
+  },
+}
+
+vim.pack.add {
+  gh 'neovim/nvim-lspconfig',
+  gh 'mason-org/mason.nvim',
+  gh 'mason-org/mason-lspconfig.nvim',
+  gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+}
+
+require('mason').setup {}
+require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
+
+for name, config in pairs(servers) do
+  vim.lsp.config(name, config)
+  vim.lsp.enable(name)
+end
