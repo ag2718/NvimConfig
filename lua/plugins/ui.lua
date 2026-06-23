@@ -44,8 +44,14 @@ require('lualine').setup {
   },
 }
 
--- File explorer
-vim.keymap.set('n', '<leader>e', function()
-  require('mini.files').open()
-end, { desc = 'File explorer' })
+-- Image rendering
+vim.pack.add { gh '3rd/image.nvim' }
+require("image").setup({
+  backend = "kitty",
+  processor = "magick_cli",
+  integrations = {},
+  hijack_file_patterns = {},
+})
 
+-- File explorer
+require("plugins.minifiles")

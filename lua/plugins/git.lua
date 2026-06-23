@@ -34,6 +34,20 @@ vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>', { desc = '[G
 vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>', { desc = '[G]it [F]ile history (repo)' })
 vim.keymap.set('n', '<leader>gc', '<cmd>DiffviewClose<cr>', { desc = '[G]it diff [C]lose' })
 
+-- Suppress LSP diagnostics on historical (old-revision) diffview buffers, whose
+-- names contain diffview://. These are read-only snapshots, so Pyright flags
+-- stale imports against the current env and produces false errors in the left
+-- pane. DiagnosticChanged fires whenever diagnostics are published for a buffer,
+-- regardless of how/when the LSP client attached; enable(false) sets a per-buffer
+-- disabled flag and hides them (via hide(), so it won't re-trigger this autocmd).
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  callback = function(args)
+    if vim.api.nvim_buf_get_name(args.buf):find('diffview://', 1, true) then
+      vim.diagnostic.enable(false, { bufnr = args.buf })
+    end
+  end,
+})
+
 -- Options for diff view and algorithm
 vim.opt.diffopt = {
   'internal',
