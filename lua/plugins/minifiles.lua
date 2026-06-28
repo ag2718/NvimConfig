@@ -1,5 +1,4 @@
 local MiniFiles = require("mini.files")
-local image_api = require("image")
 
 vim.keymap.set('n', '<leader>e', function()
   MiniFiles.open()
@@ -66,6 +65,7 @@ end
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesWindowUpdate",
   callback = function(args)
+    if not vim.g.have_image then return end
     local win = args.data.win_id
     local buf = args.data.buf_id
     if not vim.api.nvim_win_is_valid(win) then return end
@@ -104,11 +104,13 @@ vim.api.nvim_create_autocmd("User", {
     local blank = {}
     for _ = 1, max_h do blank[#blank + 1] = "" end
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, blank)
-    vim.bo[buf].modifiable = false
+    -- Leave the buffer modifiable: mini.files reuses preview buffers and writes
+    -- file/dir content into them via nvim_buf_set_lines on refresh (e.g. after a
+    -- sync/delete). Locking it here causes "Buffer is not 'modifiable'" errors.
 
     vim.schedule(function()
       if not vim.api.nvim_win_is_valid(win) then return end
-      local img = image_api.from_file(path, {
+      local img = require("image").from_file(path, {
         window = win,
         buffer = buf,
         x = 0,

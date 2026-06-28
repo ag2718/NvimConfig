@@ -4,6 +4,18 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   end,
 })
 
+-- Hand off binary/non-text files to the OS default application. `open` is
+-- macOS-only; Linux uses `xdg-open` and Windows uses `start`.
+local function os_open(file)
+  if vim.fn.has('mac') == 1 then
+    vim.fn.system({ 'open', file })
+  elseif vim.fn.has('win32') == 1 then
+    vim.fn.system({ 'cmd', '/c', 'start', '', file })
+  else
+    vim.fn.system({ 'xdg-open', file })
+  end
+end
+
 vim.api.nvim_create_autocmd("BufReadCmd", {
   pattern = {
     "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif", "*.bmp", "*.ico", "*.tiff", "*.tif",
@@ -14,7 +26,7 @@ vim.api.nvim_create_autocmd("BufReadCmd", {
     "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", "*.key", "*.pages", "*.numbers",
   },
   callback = function(args)
-    vim.fn.system({ "open", args.file })
+    os_open(args.file)
     vim.defer_fn(function()
       if vim.api.nvim_buf_is_valid(args.buf) then
         vim.api.nvim_buf_delete(args.buf, { force = true })

@@ -39,6 +39,7 @@ if not vim.g.vscode then
   require 'plugins.telescope'
   require 'plugins.lsp'
   require 'plugins.formatting'
+  require 'plugins.lint'
   require 'plugins.completion'
   require 'plugins.treesitter'
   require 'plugins.git'

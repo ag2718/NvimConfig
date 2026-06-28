@@ -1,5 +1,12 @@
 local gh = function(repo) return 'https://github.com/' .. repo end
 
+vim.pack.add {
+  gh 'neovim/nvim-lspconfig',
+  gh 'mason-org/mason.nvim',
+  gh 'mason-org/mason-lspconfig.nvim',
+  gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+}
+
 -- Some complicated LSP stuff I do not understand :)
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -45,7 +52,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 local servers = {
-  pyright = {},
+  basedpyright = {
+    settings = {
+      basedpyright = {
+        analysis = {
+          inlayHints = {
+            variableTypes = true,
+            functionReturnTypes = true,
+            callArgumentNames = true,
+          },
+        },
+      },
+    },
+  },
   stylua = {},
   lua_ls = {
     on_init = function(client)
@@ -71,13 +90,6 @@ local servers = {
     end,
     settings = { Lua = { format = { enable = false } } },
   },
-}
-
-vim.pack.add {
-  gh 'neovim/nvim-lspconfig',
-  gh 'mason-org/mason.nvim',
-  gh 'mason-org/mason-lspconfig.nvim',
-  gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
 }
 
 require('mason').setup {}

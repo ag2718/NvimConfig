@@ -13,10 +13,18 @@ require('mini.surround').setup()
 
 -- Custom text objects
 require('mini.ai').setup {
-  mappings = { around_next = 'aa', inside_next = 'ii' },
+  mappings = { around_next = 'an', inside_next = 'in'},
   n_lines = 500,
+  custom_textobjects = {
+    a = false,
+    f = false,
+  },
 }
 
 -- Highlights TODOs, BUGs, etc.
 vim.pack.add { gh 'folke/todo-comments.nvim' }
 require('todo-comments').setup { signs = false }
+
+-- Auto-close brackets, quotes, etc. while typing
+vim.pack.add { gh 'windwp/nvim-autopairs' }
+require('nvim-autopairs').setup {}

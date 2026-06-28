@@ -146,6 +146,15 @@ hi('LspReferenceText',           { bg = '#3A3D41' })
 hi('LspReferenceRead',           { bg = '#3A3D41' })
 hi('LspReferenceWrite',          { bg = '#3A3D41' })
 
+-- Markdown headings (markview): subtle per-level line background, bold.
+-- fg mirrors the core palette; bg is a dark tint of the same hue.
+hi('MdHeading1', { fg = c.blue,   bg = '#15212E', bold = true })
+hi('MdHeading2', { fg = c.teal,   bg = '#13241F', bold = true })
+hi('MdHeading3', { fg = c.green,  bg = '#182013', bold = true })
+hi('MdHeading4', { fg = c.yellow, bg = '#25251A', bold = true })
+hi('MdHeading5', { fg = c.orange, bg = '#281E16', bold = true })
+hi('MdHeading6', { fg = c.pink,   bg = '#241825', bold = true })
+
 -- GitSigns
 hi('GitSignsAdd',    { fg = c.green })
 hi('GitSignsChange', { fg = c.blue })
