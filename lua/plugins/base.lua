@@ -21,10 +21,3 @@ require('mini.ai').setup {
   },
 }
 
--- Highlights TODOs, BUGs, etc.
-vim.pack.add { gh 'folke/todo-comments.nvim' }
-require('todo-comments').setup { signs = false }
-
--- Auto-close brackets, quotes, etc. while typing
-vim.pack.add { gh 'windwp/nvim-autopairs' }
-require('nvim-autopairs').setup {}

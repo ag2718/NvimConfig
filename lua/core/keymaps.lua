@@ -1,5 +1,7 @@
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.keymap.set('i', 'kj', '<Esc>')
+vim.keymap.set('t', 'jk', [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+vim.keymap.set('t', 'kj', [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 
 vim.keymap.set({'n', 'v'}, '<leader>d', '"_d', { desc = 'Delete without yanking' })
 vim.keymap.set({'n', 'v'}, '<leader>D', '"_D', { desc = 'Delete line without yanking' })
@@ -13,12 +15,12 @@ vim.keymap.set('n', '<M-w>h', '<C-w><C-h>', { desc = 'Move focus left' })
 vim.keymap.set('n', '<M-w>l', '<C-w><C-l>', { desc = 'Move focus right' })
 vim.keymap.set('n', '<M-w>j', '<C-w><C-j>', { desc = 'Move focus down' })
 vim.keymap.set('n', '<M-w>k', '<C-w><C-k>', { desc = 'Move focus up' })
-vim.keymap.set('n', '<leader>w', '<C-w><C-w>', { desc = 'Move focus to other window' })
+vim.keymap.set('n', '`w', '<C-w><C-w>', { desc = 'Move focus to other window' })
 vim.keymap.set('t', '<M-w>h', '<C-\\><C-n><C-w><C-h>', { desc = 'Move focus left' })
 vim.keymap.set('t', '<M-w>l', '<C-\\><C-n><C-w><C-l>', { desc = 'Move focus right' })
 vim.keymap.set('t', '<M-w>j', '<C-\\><C-n><C-w><C-j>', { desc = 'Move focus down' })
 vim.keymap.set('t', '<M-w>k', '<C-\\><C-n><C-w><C-k>', { desc = 'Move focus up' })
-vim.keymap.set('t', '<leader>w', '<C-\\><C-n><C-w><C-w>', { desc = 'Move focus to other window' })
+vim.keymap.set('t', '`w', '<C-\\><C-n><C-w><C-w>', { desc = 'Move focus to other window' })
 
 -- Window splits
 vim.keymap.set('n', '<M-w>v', '<C-w>v', { desc = 'Split vertical' })
@@ -42,7 +44,7 @@ vim.keymap.set('t', '<M-w><', '<C-\\><C-n><C-w><', { desc = 'Decrease width' })
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Buffer nav
+-- Buffer and split nav
 vim.keymap.set('n', '<Tab>', '<CMD>bnext<CR>', { desc = 'Next buffer'})
 vim.keymap.set('n', '<M-Tab>', '<CMD>bprev<CR>', { desc = 'Prev buffer'})
 

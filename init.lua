@@ -43,6 +43,7 @@ if not vim.g.vscode then
   require 'plugins.completion'
   require 'plugins.treesitter'
   require 'plugins.git'
+  require 'plugins.claudecode'
 end
 
 -- vim: ts=2 sts=2 sw=2 et

@@ -7,7 +7,7 @@ local hi = function(name, opts)
 end
 
 local c = {
-  bg      = '#101010',
+  bg      = '#151717',
   fg      = '#D4D4D4',
   dim     = '#858585',
   sel     = '#264F78',

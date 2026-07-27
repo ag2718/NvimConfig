@@ -8,6 +8,14 @@ require('guess-indent').setup {}
 vim.pack.add { gh 'lukas-reineke/indent-blankline.nvim' }
 require('ibl').setup {}
 
+-- Highlights TODOs, BUGs, etc.
+vim.pack.add { gh 'folke/todo-comments.nvim' }
+require('todo-comments').setup { signs = false }
+
+-- Auto-close brackets, quotes, etc. while typing
+vim.pack.add { gh 'windwp/nvim-autopairs' }
+require('nvim-autopairs').setup {}
+
 -- Helper popup for what keys can complete a command
 vim.pack.add { gh 'folke/which-key.nvim' }
 require('which-key').setup {

@@ -4,6 +4,9 @@ vim.g.have_nerd_font = false
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.wrap = true          
+vim.opt.linebreak = true
+vim.opt.statuscolumn = '%s%=%{v:relnum == 0 ? v:lnum : v:relnum}   '
 vim.opt.mouse = 'a'
 vim.opt.autoread = true
 vim.opt.breakindent = true
